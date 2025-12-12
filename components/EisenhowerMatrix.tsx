@@ -11,24 +11,52 @@ import {
 } from '@dnd-kit/core'
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import { useTaskStore, useTasksByQuadrant } from '../src/store/taskStore'
-import { Task, EisenhowerQuadrant as QuadrantType } from '../src/types/task'
+import { Task, EisenhowerQuadrant as QuadrantType, FilterState } from '../src/types/task'
 import EisenhowerQuadrant from './EisenhowerQuadrant'
 
 interface EisenhowerMatrixProps {
   onEditTask: (task: Task) => void
   onDeleteTask: (taskId: string) => void
+  filters: FilterState
 }
 
-export default function EisenhowerMatrix({ onEditTask, onDeleteTask }: EisenhowerMatrixProps) {
+export default function EisenhowerMatrix({ onEditTask, onDeleteTask, filters }: EisenhowerMatrixProps) {
   const { updateTask, tasks } = useTaskStore()
+
+  const filterTasks = (taskList: Task[]) => {
+    return taskList.filter((task) => {
+      // Search
+      if (filters.search) {
+        const searchLower = filters.search.toLowerCase()
+        if (
+          !task.title.toLowerCase().includes(searchLower) &&
+          !task.description.toLowerCase().includes(searchLower)
+        ) {
+          return false
+        }
+      }
+
+      // Status Filter
+      if (filters.statuses.length > 0 && !filters.statuses.includes(task.kanbanStatus)) {
+        return false
+      }
+
+      // Quadrant Filter
+      if (filters.quadrants.length > 0 && !filters.quadrants.includes(task.quadrant)) {
+        return false
+      }
+
+      return true
+    })
+  }
 
   // We can use the store selectors, but we need to pass them to quadrants.
   // Or we can filter them here.
   // Using hooks here for each quadrant:
-  const urgentImportantTasks = useTasksByQuadrant(QuadrantType.URGENT_IMPORTANT)
-  const notUrgentImportantTasks = useTasksByQuadrant(QuadrantType.NOT_URGENT_IMPORTANT)
-  const urgentNotImportantTasks = useTasksByQuadrant(QuadrantType.URGENT_NOT_IMPORTANT)
-  const notUrgentNotImportantTasks = useTasksByQuadrant(QuadrantType.NOT_URGENT_NOT_IMPORTANT)
+  const urgentImportantTasks = filterTasks(useTasksByQuadrant(QuadrantType.URGENT_IMPORTANT))
+  const notUrgentImportantTasks = filterTasks(useTasksByQuadrant(QuadrantType.NOT_URGENT_IMPORTANT))
+  const urgentNotImportantTasks = filterTasks(useTasksByQuadrant(QuadrantType.URGENT_NOT_IMPORTANT))
+  const notUrgentNotImportantTasks = filterTasks(useTasksByQuadrant(QuadrantType.NOT_URGENT_NOT_IMPORTANT))
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

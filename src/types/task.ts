@@ -67,3 +67,9 @@ export interface SerializedTask extends Omit<Task, 'dueDate' | 'createdAt' | 'up
   createdAt: string
   updatedAt: string
 }
+
+export interface FilterState {
+  search: string
+  statuses: KanbanStatus[]
+  quadrants: EisenhowerQuadrant[]
+}

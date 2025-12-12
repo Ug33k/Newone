@@ -11,20 +11,48 @@ import {
 } from '@dnd-kit/core'
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import { useTaskStore, useTasksByStatus } from '../src/store/taskStore'
-import { Task, KanbanStatus } from '../src/types/task'
+import { Task, KanbanStatus, FilterState } from '../src/types/task'
 import KanbanColumn from './KanbanColumn'
 
 interface KanbanViewProps {
   onEditTask: (task: Task) => void
   onDeleteTask: (taskId: string) => void
+  filters: FilterState
 }
 
-export default function KanbanView({ onEditTask, onDeleteTask }: KanbanViewProps) {
+export default function KanbanView({ onEditTask, onDeleteTask, filters }: KanbanViewProps) {
   const { updateKanbanStatus, tasks } = useTaskStore()
 
-  const todoTasks = useTasksByStatus(KanbanStatus.TODO)
-  const inProgressTasks = useTasksByStatus(KanbanStatus.IN_PROGRESS)
-  const doneTasks = useTasksByStatus(KanbanStatus.DONE)
+  const filterTasks = (taskList: Task[]) => {
+    return taskList.filter((task) => {
+      // Search
+      if (filters.search) {
+        const searchLower = filters.search.toLowerCase()
+        if (
+          !task.title.toLowerCase().includes(searchLower) &&
+          !task.description.toLowerCase().includes(searchLower)
+        ) {
+          return false
+        }
+      }
+
+      // Status Filter
+      if (filters.statuses.length > 0 && !filters.statuses.includes(task.kanbanStatus)) {
+        return false
+      }
+
+      // Quadrant Filter
+      if (filters.quadrants.length > 0 && !filters.quadrants.includes(task.quadrant)) {
+        return false
+      }
+
+      return true
+    })
+  }
+
+  const todoTasks = filterTasks(useTasksByStatus(KanbanStatus.TODO))
+  const inProgressTasks = filterTasks(useTasksByStatus(KanbanStatus.IN_PROGRESS))
+  const doneTasks = filterTasks(useTasksByStatus(KanbanStatus.DONE))
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
