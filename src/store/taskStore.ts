@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { create } from 'zustand'
 import {
   Task,
@@ -220,8 +221,13 @@ export const useTaskCount = () => useTaskStore((state) => state.tasks.length)
 export const useTasksByQuadrant = (quadrant: EisenhowerQuadrant) =>
   useTaskStore((state) => state.getTasksByQuadrant(quadrant))
 
-export const useTasksByStatus = (status: KanbanStatus) =>
-  useTaskStore((state) => state.getTasksByStatus(status))
+export const useTasksByStatus = (status: KanbanStatus) => {
+  const selector = useCallback(
+    (state: TaskStore) => state.getTasksByStatus(status),
+    [status]
+  )
+  return useTaskStore(selector)
+}
 
 export const useAllTasks = () => useTaskStore((state) => state.getAllTasks())
 
