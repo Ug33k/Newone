@@ -1,18 +1,16 @@
-# Next.js 14 Starter
+# Eisenhower Matrix & Kanban Board
 
-A modern Next.js 14 application with TypeScript, ESLint, Prettier, and essential dependencies for rapid development.
+A modern task management application built with Next.js 14, allowing you to organize tasks using both Kanban board and Eisenhower Matrix methodologies. This project leverages TypeScript, Tailwind CSS, Zustand, and @dnd-kit for a robust and responsive user experience.
 
 ## ✨ Features
 
-- **🚀 Next.js 14** - Latest App Router with Turbopack support
-- **🎨 TypeScript** - Full type safety and better development experience
-- **📝 ESLint & Prettier** - Code linting and formatting for consistency
-- **🔧 State Management** - Zustand for lightweight and powerful state management
-- **🖱️ Drag & Drop** - @dnd-kit for accessible drag and drop functionality
-- **📅 Date Handling** - date-fns for modern date manipulation
-- **🎭 Icons** - Lucide React for beautiful, customizable icons
-- **🌙 Dark Mode** - Built-in dark mode support with CSS variables
-- **📱 Responsive** - Mobile-first responsive design
+- **📊 Dual Views** - Seamlessly switch between Kanban Board and Eisenhower Matrix views
+- **🔄 Synchronized State** - Tasks are unified; changing status in Kanban or priority in Matrix updates the single task record
+- **🔍 Search & Filter** - Powerful filtering by status, priority (quadrant), and text search
+- **📱 Fully Responsive** - Optimized layout for desktop, tablet, and mobile devices with collapsible menus and stacked columns
+- **👆 Touch Support** - Full drag-and-drop support for touch screens using `@dnd-kit`
+- **💾 Local Persistence** - Tasks are automatically saved to your browser's local storage
+- **🎨 Dark Mode** - System-aware dark mode support
 
 ## 🛠️ Tech Stack
 
@@ -20,7 +18,7 @@ A modern Next.js 14 application with TypeScript, ESLint, Prettier, and essential
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS 4
 - **State Management**: Zustand
-- **Drag & Drop**: @dnd-kit
+- **Drag & Drop**: @dnd-kit (Core, Sortable, Utilities)
 - **Date Utilities**: date-fns
 - **Icons**: Lucide React
 - **Code Quality**: ESLint, Prettier
@@ -29,20 +27,21 @@ A modern Next.js 14 application with TypeScript, ESLint, Prettier, and essential
 
 ```
 project/
-├── app/                    # Next.js App Router
-│   ├── layout.tsx         # Root layout
-│   ├── page.tsx           # Home page
-│   └── globals.css        # Global styles and CSS variables
-├── components/            # Reusable React components
-│   ├── TodoList.tsx      # Todo list with basic CRUD
-│   ├── DragDropTodo.tsx  # Drag & drop todo component
-│   └── TodoItem.tsx      # Individual todo item
-├── lib/                   # Utility functions and stores
-│   └── store.ts          # Zustand store for state management
-├── public/               # Static assets
-├── .prettierrc          # Prettier configuration
-├── eslint.config.mjs    # ESLint configuration
-└── tailwind.config.ts   # Tailwind CSS configuration
+├── app/                    # Next.js App Router pages
+├── components/             # React components
+│   ├── TaskBoard.tsx       # Main container and state manager
+│   ├── Header.tsx          # Navigation, search, and filters
+│   ├── KanbanView.tsx      # Kanban board view
+│   ├── KanbanColumn.tsx    # Individual Kanban column
+│   ├── EisenhowerMatrix.tsx# Eisenhower Matrix view
+│   ├── EisenhowerQuadrant.tsx # Individual Matrix quadrant
+│   ├── TaskModal.tsx       # Create/Edit task modal
+│   └── ...
+├── src/
+│   ├── store/              # Zustand store (taskStore.ts)
+│   ├── types/              # TypeScript definitions (task.ts)
+│   └── utils/              # Helper functions
+└── ...
 ```
 
 ## 🚀 Getting Started
@@ -50,101 +49,52 @@ project/
 ### Prerequisites
 
 - Node.js 18+
-- npm (recommended)
+- npm
 
 ### Installation
 
 1. Clone the repository:
-
-```bash
-git clone <your-repo-url>
-cd project
-```
+   ```bash
+   git clone <your-repo-url>
+   cd project
+   ```
 
 2. Install dependencies:
-
-```bash
-npm install
-```
+   ```bash
+   npm install
+   ```
 
 3. Run the development server:
+   ```bash
+   npm run dev
+   ```
 
-```bash
-npm run dev
-```
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
+## 📖 Usage Guide
 
-## 📖 Available Scripts
+### Kanban Board
+- **Workflow**: Organize tasks into "To Do", "In Progress", and "Done" columns.
+- **Drag & Drop**: Move tasks between columns to update their status.
+- **Filtering**: Use the filter menu to view tasks specific to certain priorities (Quadrants).
 
-- `npm run dev` - Start the development server
-- `npm run build` - Build the application for production
-- `npm run start` - Start the production server
-- `npm run lint` - Run ESLint to check for linting errors
-- `npm run lint:fix` - Run ESLint with automatic fixes
-- `npm run format` - Format code with Prettier
-- `npm run format:check` - Check code formatting with Prettier
+### Eisenhower Matrix
+- **Prioritization**: Categorize tasks by Urgency and Importance.
+  1. **Do First** (Urgent & Important)
+  2. **Schedule** (Not Urgent & Important)
+  3. **Delegate** (Urgent & Not Important)
+  4. **Eliminate** (Not Urgent & Not Important)
+- **Drag & Drop**: Move tasks between quadrants to update their priority.
 
-## 🎯 Demo Components
+### Managing Tasks
+- **Create**: Click the "New Task" button.
+- **Edit/Delete**: Use the action buttons on individual task cards.
+- **Search**: Use the search bar in the filter menu to find tasks by title or description.
 
-The homepage includes two demo components showcasing the installed libraries:
+## ⚠️ Limitations
 
-### TodoList
-
-A basic todo list implementation using Zustand for state management, demonstrating:
-
-- Adding/removing todos
-- Local storage persistence
-- Dark mode styling
-
-### DragDropTodo
-
-A drag and drop todo list using @dnd-kit, demonstrating:
-
-- Accessible drag and drop functionality
-- Integration with Zustand state
-- Custom drag handles and animations
-
-## 🎨 Styling & Theming
-
-The project uses a comprehensive color system with CSS variables in `globals.css`:
-
-- **Primary Colors**: Blue theme with proper contrast ratios
-- **Dark Mode**: Automatic dark mode support with CSS media queries
-- **Responsive Typography**: Mobile-first responsive text sizing
-- **Custom Properties**: Extensible design system with consistent spacing and colors
-
-## 🔧 Configuration
-
-### ESLint
-
-Configured with Next.js recommended rules and TypeScript support in `eslint.config.mjs`.
-
-### Prettier
-
-Configured with Tailwind CSS plugin for consistent code formatting in `.prettierrc`.
-
-### Tailwind CSS
-
-Using Tailwind CSS 4 with custom color variables and responsive design utilities.
-
-## 🚀 Deployment
-
-### Vercel (Recommended)
-
-1. Push your code to GitHub, GitLab, or Bitbucket
-2. Import your project to [Vercel](https://vercel.com/new)
-3. Deploy with automatic CI/CD
-
-### Other Platforms
-
-The project is configured to work with any platform that supports Node.js:
-
-- Netlify
-- Railway
-- Render
-- AWS Amplify
-- Digital Ocean App Platform
+- **Persistence**: Data is stored in the browser's `localStorage`. It does not sync across devices or browsers. Clearing your browser cache will delete your tasks.
+- **Backend**: There is no server-side database; this is a client-side only application.
 
 ## 🤝 Contributing
 
@@ -156,13 +106,4 @@ The project is configured to work with any platform that supports Node.js:
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgments
-
-- [Next.js](https://nextjs.org/) - The React framework for production
-- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
-- [Zustand](https://github.com/pmndrs/zustand) - State management solution
-- [@dnd-kit](https://dndkit.com/) - Accessible drag and drop library
-- [date-fns](https://date-fns.org/) - Modern date utility library
-- [Lucide](https://lucide.dev/) - Beautiful & consistent icons
+This project is licensed under the MIT License.

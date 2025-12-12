@@ -1,12 +1,12 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Plus, LayoutGrid, Columns } from 'lucide-react'
 import { useTaskStore, useTaskStoreInitialized } from '../src/store/taskStore'
-import { Task, KanbanStatus, CreateTaskPayload } from '../src/types/task'
+import { Task, KanbanStatus, CreateTaskPayload, FilterState } from '../src/types/task'
 import TaskModal, { TaskFormData } from './TaskModal'
 import KanbanView from './KanbanView'
 import EisenhowerMatrix from './EisenhowerMatrix'
+import Header from './Header'
 
 type ViewType = 'kanban' | 'matrix'
 
@@ -18,6 +18,11 @@ export default function TaskBoard() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingTask, setEditingTask] = useState<Task | null>(null)
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create')
+  const [filters, setFilters] = useState<FilterState>({
+    search: '',
+    statuses: [],
+    quadrants: [],
+  })
 
   useEffect(() => {
     hydrate()
@@ -75,58 +80,25 @@ export default function TaskBoard() {
   return (
     <div className="min-h-screen bg-gray-100 p-6 dark:bg-gray-950">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
-              {view === 'kanban' ? 'Kanban Board' : 'Eisenhower Matrix'}
-            </h1>
-            <p className="mt-2 text-gray-600 dark:text-gray-400">
-              {view === 'kanban'
-                ? 'Organize your tasks by status'
-                : 'Prioritize tasks by urgency and importance'}
-            </p>
-          </div>
-          
-          <div className="flex items-center gap-4">
-            <div className="flex rounded-lg bg-white p-1 shadow-sm dark:bg-gray-800">
-              <button
-                onClick={() => setView('kanban')}
-                className={`flex items-center gap-2 rounded px-3 py-1.5 text-sm font-medium transition-colors ${
-                  view === 'kanban'
-                    ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
-                    : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
-                }`}
-              >
-                <Columns size={18} />
-                Kanban
-              </button>
-              <button
-                onClick={() => setView('matrix')}
-                className={`flex items-center gap-2 rounded px-3 py-1.5 text-sm font-medium transition-colors ${
-                  view === 'matrix'
-                    ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
-                    : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
-                }`}
-              >
-                <LayoutGrid size={18} />
-                Matrix
-              </button>
-            </div>
-
-            <button
-              onClick={handleCreateTask}
-              className="flex items-center gap-2 rounded-lg bg-blue-500 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-600"
-            >
-              <Plus size={20} />
-              New Task
-            </button>
-          </div>
-        </div>
+        <Header
+          view={view}
+          setView={setView}
+          onFilterChange={setFilters}
+          onCreateTask={handleCreateTask}
+        />
 
         {view === 'kanban' ? (
-          <KanbanView onEditTask={handleEditTask} onDeleteTask={handleDeleteTask} />
+          <KanbanView
+            onEditTask={handleEditTask}
+            onDeleteTask={handleDeleteTask}
+            filters={filters}
+          />
         ) : (
-          <EisenhowerMatrix onEditTask={handleEditTask} onDeleteTask={handleDeleteTask} />
+          <EisenhowerMatrix
+            onEditTask={handleEditTask}
+            onDeleteTask={handleDeleteTask}
+            filters={filters}
+          />
         )}
       </div>
 
