@@ -1,109 +1,275 @@
-# Eisenhower Matrix & Kanban Board
+# Task Board - Fullstack Monorepo
 
-A modern task management application built with Next.js 14, allowing you to organize tasks using both Kanban board and Eisenhower Matrix methodologies. This project leverages TypeScript, Tailwind CSS, Zustand, and @dnd-kit for a robust and responsive user experience.
+A modern, fullstack task management application built with Next.js, NestJS, and PostgreSQL in a pnpm workspace monorepo.
 
-## ✨ Features
+## 🏗️ Architecture
 
-- **📊 Dual Views** - Seamlessly switch between Kanban Board and Eisenhower Matrix views
-- **🔄 Synchronized State** - Tasks are unified; changing status in Kanban or priority in Matrix updates the single task record
-- **🔍 Search & Filter** - Powerful filtering by status, priority (quadrant), and text search
-- **📱 Fully Responsive** - Optimized layout for desktop, tablet, and mobile devices with collapsible menus and stacked columns
-- **👆 Touch Support** - Full drag-and-drop support for touch screens using `@dnd-kit`
-- **💾 Local Persistence** - Tasks are automatically saved to your browser's local storage
-- **🎨 Dark Mode** - System-aware dark mode support
+This project is structured as a monorepo with:
 
-## 🛠️ Tech Stack
-
-- **Framework**: Next.js 14 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS 4
-- **State Management**: Zustand
-- **Drag & Drop**: @dnd-kit (Core, Sortable, Utilities)
-- **Date Utilities**: date-fns
-- **Icons**: Lucide React
-- **Code Quality**: ESLint, Prettier
-
-## 📁 Project Structure
-
-```
-project/
-├── app/                    # Next.js App Router pages
-├── components/             # React components
-│   ├── TaskBoard.tsx       # Main container and state manager
-│   ├── Header.tsx          # Navigation, search, and filters
-│   ├── KanbanView.tsx      # Kanban board view
-│   ├── KanbanColumn.tsx    # Individual Kanban column
-│   ├── EisenhowerMatrix.tsx# Eisenhower Matrix view
-│   ├── EisenhowerQuadrant.tsx # Individual Matrix quadrant
-│   ├── TaskModal.tsx       # Create/Edit task modal
-│   └── ...
-├── src/
-│   ├── store/              # Zustand store (taskStore.ts)
-│   ├── types/              # TypeScript definitions (task.ts)
-│   └── utils/              # Helper functions
-└── ...
-```
+- **apps/web**: Next.js 14+ frontend with TypeScript, Tailwind CSS, and Zustand
+- **apps/api**: NestJS backend with TypeORM, PostgreSQL, and WebSocket support
+- **packages/typescript-config**: Shared TypeScript configurations
+- **packages/eslint-config**: Shared ESLint configurations
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
-- npm
+- Node.js >= 18.0.0
+- pnpm >= 8.0.0
+- Docker and Docker Compose (for local development)
 
 ### Installation
 
 1. Clone the repository:
-   ```bash
-   git clone <your-repo-url>
-   cd project
-   ```
+
+```bash
+git clone <repository-url>
+cd project
+```
 
 2. Install dependencies:
-   ```bash
-   npm install
-   ```
 
-3. Run the development server:
-   ```bash
-   npm run dev
-   ```
+```bash
+pnpm install
+```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+3. Copy the environment file and configure it:
 
-## 📖 Usage Guide
+```bash
+cp .env.example .env
+```
 
-### Kanban Board
-- **Workflow**: Organize tasks into "To Do", "In Progress", and "Done" columns.
-- **Drag & Drop**: Move tasks between columns to update their status.
-- **Filtering**: Use the filter menu to view tasks specific to certain priorities (Quadrants).
+4. Start the database:
 
-### Eisenhower Matrix
-- **Prioritization**: Categorize tasks by Urgency and Importance.
-  1. **Do First** (Urgent & Important)
-  2. **Schedule** (Not Urgent & Important)
-  3. **Delegate** (Urgent & Not Important)
-  4. **Eliminate** (Not Urgent & Not Important)
-- **Drag & Drop**: Move tasks between quadrants to update their priority.
+```bash
+pnpm docker:up
+```
 
-### Managing Tasks
-- **Create**: Click the "New Task" button.
-- **Edit/Delete**: Use the action buttons on individual task cards.
-- **Search**: Use the search bar in the filter menu to find tasks by title or description.
+5. Run database migrations:
 
-## ⚠️ Limitations
+```bash
+pnpm migration:run
+```
 
-- **Persistence**: Data is stored in the browser's `localStorage`. It does not sync across devices or browsers. Clearing your browser cache will delete your tasks.
-- **Backend**: There is no server-side database; this is a client-side only application.
+6. Seed the database (optional):
+
+```bash
+pnpm seed
+```
+
+### Development
+
+Start both applications in development mode:
+
+```bash
+pnpm dev
+```
+
+Or start them individually:
+
+```bash
+# Start only the web app
+pnpm dev:web
+
+# Start only the API
+pnpm dev:api
+```
+
+The applications will be available at:
+
+- Web App: http://localhost:3000
+- API: http://localhost:3001
+
+## 📦 Database Schema
+
+The application includes the following entities:
+
+- **User**: Application users with roles and permissions
+- **Permission**: Role-based access control
+- **Board**: Main kanban board container
+- **Column**: Board columns (To Do, In Progress, Done, etc.)
+- **Swimlane**: Horizontal lanes for organizing cards
+- **ClassService**: Card categories (Bug, Feature, etc.)
+- **Card**: Individual tasks/items
+- **ColumnHistory**: Audit trail for card movements
+- **Metric**: Custom metrics for cards
+
+## 🛠️ Available Scripts
+
+### Root Level
+
+- `pnpm dev` - Start all apps in development mode
+- `pnpm build` - Build all apps
+- `pnpm lint` - Lint all apps
+- `pnpm format` - Format all files with Prettier
+- `pnpm migration:generate` - Generate a new migration
+- `pnpm migration:run` - Run pending migrations
+- `pnpm migration:revert` - Revert last migration
+- `pnpm seed` - Seed the database with sample data
+- `pnpm docker:up` - Start Docker services
+- `pnpm docker:down` - Stop Docker services
+- `pnpm docker:logs` - View Docker logs
+
+### Web App (apps/web)
+
+- `pnpm dev:web` - Start in development mode
+- `pnpm build:web` - Build for production
+- `pnpm start:web` - Start production server
+
+### API (apps/api)
+
+- `pnpm dev:api` - Start in development mode
+- `pnpm build:api` - Build for production
+- `pnpm start:api` - Start production server
+
+## 🔧 Environment Variables
+
+### Required Variables
+
+```env
+# Database
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+DB_DATABASE=taskboard
+
+# API
+PORT=3001
+NODE_ENV=development
+CORS_ORIGIN=http://localhost:3000
+
+# Web App
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
+
+### Optional Variables
+
+```env
+# Supabase (if using)
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_JWT_SECRET=your-jwt-secret
+
+# WebSocket
+SOCKET_HOST=localhost
+SOCKET_PORT=3001
+NEXT_PUBLIC_SOCKET_URL=http://localhost:3001
+```
+
+See `.env.example` for a complete list.
+
+## 🐳 Docker
+
+### Development with Docker
+
+Start all services including the database:
+
+```bash
+docker-compose up -d
+```
+
+View logs:
+
+```bash
+docker-compose logs -f
+```
+
+Stop all services:
+
+```bash
+docker-compose down
+```
+
+### Production Build
+
+Build and run in production mode:
+
+```bash
+docker-compose -f docker-compose.yml up --build
+```
+
+## 📊 Database Migrations
+
+### Creating a New Migration
+
+After modifying entities, generate a migration:
+
+```bash
+pnpm migration:generate -- src/database/migrations/MigrationName
+```
+
+### Running Migrations
+
+Apply pending migrations:
+
+```bash
+pnpm migration:run
+```
+
+### Reverting Migrations
+
+Revert the last migration:
+
+```bash
+pnpm migration:revert
+```
+
+## 🧪 Testing
+
+The project uses GitHub Actions for CI/CD, which includes:
+
+- Linting and formatting checks
+- TypeScript compilation
+- Building both applications
+- Running database migrations in a test environment
+
+## 🔐 Authentication
+
+The backend is configured to work with Supabase for authentication, with support for:
+
+- JWT token validation
+- Role-based access control
+- Permission management
+
+## 🌐 API Endpoints
+
+The API will expose RESTful endpoints for:
+
+- User management
+- Board operations (CRUD)
+- Card management
+- Column operations
+- Swimlane management
+- Class of service operations
+- Metrics tracking
+
+## 🎨 Frontend Features
+
+- **Kanban Board View**: Drag-and-drop task management
+- **Eisenhower Matrix**: Priority-based task organization
+- **Responsive Design**: Mobile-first approach
+- **Dark Mode**: Full dark mode support
+- **Real-time Updates**: WebSocket support for live collaboration
+- **Filters & Search**: Advanced filtering and search capabilities
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit your changes: `git commit -m 'Add amazing feature'`
-4. Push to the branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
+1. Create a feature branch: `git checkout -b feat/your-feature`
+2. Make your changes
+3. Run linting and formatting: `pnpm lint:fix && pnpm format`
+4. Commit your changes: `git commit -m 'feat: add some feature'`
+5. Push to the branch: `git push origin feat/your-feature`
+6. Open a Pull Request
 
 ## 📝 License
 
-This project is licensed under the MIT License.
+This project is private and proprietary.
+
+## 🙏 Acknowledgments
+
+- Next.js team for the amazing framework
+- NestJS team for the powerful backend framework
+- TypeORM for the excellent ORM
+- All open-source contributors

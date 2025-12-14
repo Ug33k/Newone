@@ -20,7 +20,11 @@ interface EisenhowerMatrixProps {
   filters: FilterState
 }
 
-export default function EisenhowerMatrix({ onEditTask, onDeleteTask, filters }: EisenhowerMatrixProps) {
+export default function EisenhowerMatrix({
+  onEditTask,
+  onDeleteTask,
+  filters,
+}: EisenhowerMatrixProps) {
   const { updateTask, tasks } = useTaskStore()
 
   const filterTasks = (taskList: Task[]) => {
@@ -56,7 +60,9 @@ export default function EisenhowerMatrix({ onEditTask, onDeleteTask, filters }: 
   const urgentImportantTasks = filterTasks(useTasksByQuadrant(QuadrantType.URGENT_IMPORTANT))
   const notUrgentImportantTasks = filterTasks(useTasksByQuadrant(QuadrantType.NOT_URGENT_IMPORTANT))
   const urgentNotImportantTasks = filterTasks(useTasksByQuadrant(QuadrantType.URGENT_NOT_IMPORTANT))
-  const notUrgentNotImportantTasks = filterTasks(useTasksByQuadrant(QuadrantType.NOT_URGENT_NOT_IMPORTANT))
+  const notUrgentNotImportantTasks = filterTasks(
+    useTasksByQuadrant(QuadrantType.NOT_URGENT_NOT_IMPORTANT)
+  )
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -80,7 +86,7 @@ export default function EisenhowerMatrix({ onEditTask, onDeleteTask, filters }: 
     // Check if dropping on a quadrant ID
     if (Object.values(QuadrantType).includes(overId as QuadrantType)) {
       updateTask(activeTaskId, { quadrant: overId as QuadrantType })
-    } else if (overId.startsWith('task_') || tasks.find(t => t.id === overId)) {
+    } else if (overId.startsWith('task_') || tasks.find((t) => t.id === overId)) {
       // If dropping on another task, find that task and get its quadrant
       const targetTask = tasks.find((t) => t.id === overId)
       if (targetTask) {

@@ -27,7 +27,9 @@ export default function EisenhowerQuadrant({
   const { setNodeRef } = useDroppable({ id: quadrant })
 
   return (
-    <div className={`flex flex-col rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-900 ${className}`}>
+    <div
+      className={`flex flex-col rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-900 ${className}`}
+    >
       <div className="border-b border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
         <h2 className="font-semibold text-gray-900 dark:text-white">
           {title}
@@ -50,9 +52,7 @@ export default function EisenhowerQuadrant({
           <div className="flex items-center justify-center rounded-lg border-2 border-dashed border-gray-300 py-8 text-center dark:border-gray-600">
             <div className="text-gray-500 dark:text-gray-400">
               <p className="text-sm">No tasks</p>
-              <p className="text-xs text-gray-400 dark:text-gray-500">
-                Drag tasks here
-              </p>
+              <p className="text-xs text-gray-400 dark:text-gray-500">Drag tasks here</p>
             </div>
           </div>
         ) : (

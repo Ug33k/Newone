@@ -27,7 +27,7 @@ export default function Header({ view, setView, onFilterChange, onCreateTask }: 
 
   const toggleStatus = (status: KanbanStatus) => {
     const newStatuses = selectedStatuses.includes(status)
-      ? selectedStatuses.filter(s => s !== status)
+      ? selectedStatuses.filter((s) => s !== status)
       : [...selectedStatuses, status]
     setSelectedStatuses(newStatuses)
     onFilterChange({ search, statuses: newStatuses, quadrants: selectedQuadrants })
@@ -35,24 +35,27 @@ export default function Header({ view, setView, onFilterChange, onCreateTask }: 
 
   const toggleQuadrant = (quadrant: EisenhowerQuadrant) => {
     const newQuadrants = selectedQuadrants.includes(quadrant)
-      ? selectedQuadrants.filter(q => q !== quadrant)
+      ? selectedQuadrants.filter((q) => q !== quadrant)
       : [...selectedQuadrants, quadrant]
     setSelectedQuadrants(newQuadrants)
     onFilterChange({ search, statuses: selectedStatuses, quadrants: newQuadrants })
   }
 
   const formatQuadrant = (q: string) => {
-    return q.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+    return q
+      .split('_')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ')
   }
 
   return (
     <div className="mb-8 space-y-4">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-3xl font-bold text-gray-900 md:text-4xl dark:text-white">
             {view === 'kanban' ? 'Kanban Board' : 'Eisenhower Matrix'}
           </h1>
-          <p className="mt-2 text-sm md:text-base text-gray-600 dark:text-gray-400">
+          <p className="mt-2 text-sm text-gray-600 md:text-base dark:text-gray-400">
             {view === 'kanban'
               ? 'Organize your tasks by status'
               : 'Prioritize tasks by urgency and importance'}
@@ -109,16 +112,16 @@ export default function Header({ view, setView, onFilterChange, onCreateTask }: 
       </div>
 
       {isFiltersOpen && (
-        <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 animate-in fade-in slide-in-from-top-2">
+        <div className="animate-in fade-in slide-in-from-top-2 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
           <div className="mb-4">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 placeholder="Search tasks..."
                 value={search}
                 onChange={handleSearchChange}
-                className="w-full rounded-md border border-gray-300 py-2 pl-9 pr-4 text-sm focus:border-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                className="w-full rounded-md border border-gray-300 py-2 pr-4 pl-9 text-sm focus:border-blue-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               />
             </div>
           </div>
