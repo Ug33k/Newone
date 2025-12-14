@@ -222,10 +222,7 @@ export const useTasksByQuadrant = (quadrant: EisenhowerQuadrant) =>
   useTaskStore((state) => state.getTasksByQuadrant(quadrant))
 
 export const useTasksByStatus = (status: KanbanStatus) => {
-  const selector = useCallback(
-    (state: TaskStore) => state.getTasksByStatus(status),
-    [status]
-  )
+  const selector = useCallback((state: TaskStore) => state.getTasksByStatus(status), [status])
   return useTaskStore(selector)
 }
 

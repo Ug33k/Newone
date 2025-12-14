@@ -76,7 +76,10 @@ export default function KanbanView({ onEditTask, onDeleteTask, filters }: Kanban
     // Check if dropping on a column (status)
     if (Object.values(KanbanStatus).includes(overStatus as KanbanStatus)) {
       updateKanbanStatus(activeTaskId, overStatus as KanbanStatus)
-    } else if (typeof over.id === 'string' && (over.id.startsWith('task_') || tasks.find(t => t.id === over.id))) {
+    } else if (
+      typeof over.id === 'string' &&
+      (over.id.startsWith('task_') || tasks.find((t) => t.id === over.id))
+    ) {
       // If dropping on another task, get its status and update
       // We look up the task in the store tasks to be safe
       const targetTask = tasks.find((t) => t.id === over.id)
